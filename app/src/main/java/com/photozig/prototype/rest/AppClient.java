@@ -29,20 +29,11 @@ public class AppClient {
 
     private AppClient() {
 
-        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
-        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-
         Gson gson = new GsonBuilder()
                 .create();
 
-        final OkHttpClient client = new OkHttpClient().newBuilder()
-                .addInterceptor(logInterceptor)
-                .addInterceptor(new ConnectivityAwareInterceptor())
-                .build();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         mApiService = retrofit.create(ApiService.class);

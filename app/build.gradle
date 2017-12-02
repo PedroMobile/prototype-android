@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.photozig.prototype"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -24,7 +24,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Retrofit
@@ -32,9 +33,22 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
 
     compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.github.pwittchen:reactivenetwork:0.4.0'
 
+    // Butterknife
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //Picasso to load ImageViews from WEB
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // RecyclerView-FlexibleDivider
+    // https://github.com/yqritc/RecyclerView-FlexibleDivider
+    compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+
+    //progressBar
+    compile 'com.pnikosis:materialish-progress:1.7'
 
     testCompile 'junit:junit:4.12'
 }

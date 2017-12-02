@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#25323e</color>
+    <color name="colorPrimaryDark">#1d2931</color>
+    <color name="colorAccent">#ff005d</color>
+    <color name="enabled_color">@color/gray_darkness</color>
+    <color name="disabled_color">@color/gray_darkness</color>
+    <color name="black_overlay_light">#44000000</color>
+
+
+    <!-- GRAYS -->
+    <item name="gray_darkness"      type="color">#FF1E1E1E</item>
+    <item name="gray_darker"        type="color">#FF303030</item>
+    <item name="gray_dark"          type="color">#FF595959</item>
+    <item name="gray"               type="color">#FF808080</item>
+    <item name="gray_light"         type="color">#FFB9B9B9</item>
+    <item name="gray_lighting"      type="color">#FFf3f4f4</item>
+
+    <item name="gray_lighting_1"    type="color">#FFe4e6e6</item>
+    <item name="gray_lighter_1"      type="color">#FFeeeeee</item>
+    <item name="gray_lighting_2"    type="color">#FFf7f4f4</item>
+    <item name="gray_lighter"       type="color">#FFF7F7F7</item>
+
+    <!-- DEFAULT -->
+    <color name="transparent"        >#00FFFFFF</color>
+    <color name="transparent_black"  >#80000000</color>
+    <color name="black"              >#FF000000</color>
+    <color name="white"              >#FFFFFFFF</color>
+    <color name="white_30"           >#4DFFFFFF</color>
+    <color name="white_40"           >#66FFFFFF</color>
+    <color name="white_50"           >#88FFFFFF</color>
+
+    <!--grey-->
+    <color name="md_grey_50">#FAFAFA</color>
+    <color name="md_grey_100">#F5F5F5</color>
+    <color name="md_grey_200">#EEEEEE</color>
+
+    <color name="md_grey_300">#E0E0E0</color>
+    <color name="md_grey_350">#D8D8D8</color>
+    <color name="md_grey_400">#BDBDBD</color>
+    <color name="md_grey_500">#9E9E9E</color>
+    <color name="md_grey_600">#757575</color>
+    <color name="md_grey_700">#616161</color>
+    <color name="md_grey_800">#424242</color>
+    <color name="md_grey_850">#3C3C3C</color>
+    <color name="md_grey_900">#212121</color>
+    <color name="md_black_1000">#000000</color>
+    <color name="md_white_1000">#ffffff</color>
 </resources>
