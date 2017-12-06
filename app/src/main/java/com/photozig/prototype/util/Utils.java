@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 
 import com.github.pwittchen.reactivenetwork.library.ConnectivityStatus;
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork;
 import com.photozig.prototype.BaseApplication;
 import com.photozig.prototype.R;
 
+import java.io.File;
 import java.util.Random;
 
 public class Utils {
@@ -32,6 +35,16 @@ public class Utils {
             return -1;
         }
         return 0;
+    }
+
+    public static String getRootDirPath(Context context) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            File file = ContextCompat.getExternalFilesDirs(context.getApplicationContext(),
+                    null)[0];
+            return file.getAbsolutePath();
+        } else {
+            return context.getApplicationContext().getFilesDir().getAbsolutePath();
+        }
     }
 
     public static void displayAlert(Context context, String title, String string, DialogInterface.OnClickListener onPositiveClickListener){

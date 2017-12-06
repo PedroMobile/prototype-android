@@ -6,18 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
+import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
 import com.photozig.prototype.R;
+import com.photozig.prototype.controller.DownloadManager;
 import com.photozig.prototype.rest.AppClient;
 import com.photozig.prototype.rest.models.AppInfo;
 import com.photozig.prototype.rest.models.ZigObject;
-import com.photozig.prototype.ui.adapter.ObjectAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.photozig.prototype.ui.adapter.PhotoAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).color(getResources().getColor(R.color.gray)).sizeResId(R.dimen.margin_1dp).build());
-
         // setup SwipeLayout
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -64,8 +61,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeLayout.measure(0,0);
         swipeLayout.setRefreshing(true);
 
+        // init Download Manager
+        DownloadManager.init(getApplicationContext());
+
         // Start load feed
         load(this);
+    }
+
+    /**
+     * Init Downloader
+     */
+    private void initDownloader(){
+
+        // Enabling database for resume support even after the application is killed:
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(true)
+                .build();
+        PRDownloader.initialize(getApplicationContext(), config);
+
     }
 
     @Override
@@ -83,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void onResponse(Call<AppInfo> call, Response<AppInfo> response) {
                 swipeLayout.setRefreshing(false);
 
-                ObjectAdapter adapter = new ObjectAdapter(context, response.body().getZigObjects(), response.body().getAssetsLocation());
+                PhotoAdapter adapter = new PhotoAdapter(context, response.body().getZigObjects(), response.body().getAssetsLocation());
                 recyclerView.setAdapter(adapter);
 
             }
