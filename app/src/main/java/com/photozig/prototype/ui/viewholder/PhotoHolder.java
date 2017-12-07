@@ -1,4 +1,4 @@
-package com.photozig.prototype.ui.adapter;
+package com.photozig.prototype.ui.viewholder;
 
 import android.content.Context;
 import android.os.Handler;
@@ -30,7 +30,7 @@ import java.util.TimerTask;
 
 public class PhotoHolder extends RecyclerView.ViewHolder {
 
-    private static final String TAG = "PHOTO";
+    private static final String TAG = "HOLDER";
 
     private ZigObject item;
 
@@ -58,7 +58,7 @@ public class PhotoHolder extends RecyclerView.ViewHolder {
                 });
             }
         };
-        timer.schedule(doAsynchronousTask, 0, 50);
+        timer.schedule(doAsynchronousTask, 0, 500);
     }
 
     private void updateStateDownload(ZigObject item){
@@ -69,6 +69,7 @@ public class PhotoHolder extends RecyclerView.ViewHolder {
         TextView txtComplete = (TextView) this.itemView.findViewById(R.id.txt_complete);
 
         if(DownloadManager.downloadIds.get(item.getBg()) != null){
+
             int downloadId = DownloadManager.downloadIds.get(item.getBg());
             txtComplete.setVisibility(View.GONE);
 
@@ -83,22 +84,21 @@ public class PhotoHolder extends RecyclerView.ViewHolder {
                     }
 
                     break;
+
                 case PAUSED:
                     clickDownload.setVisibility(View.GONE);
                     progressDownload.setVisibility(View.VISIBLE);
                     progressDownload.setProgress(DownloadManager.progresses.get(item.getBg()));
                     break;
+
                 case COMPLETED:
                     clickDownload.setVisibility(View.GONE);
                     progressDownload.setVisibility(View.GONE);
                     break;
+
                 case CANCELLED:
                     clickDownload.setVisibility(View.VISIBLE);
                     progressDownload.setVisibility(View.GONE);
-                case UNKNOWN:
-
-                    DownloadManager.downloadIds.remove(item.getBg());
-
                     break;
             }
         }else {

@@ -1,7 +1,7 @@
 package com.photozig.prototype.ui.adapter;
 
 import android.content.Context;
-import android.os.Handler;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,25 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.downloader.Error;
-import com.downloader.OnDownloadListener;
-import com.downloader.OnProgressListener;
-import com.downloader.OnStartOrResumeListener;
-import com.downloader.PRDownloader;
-import com.downloader.Progress;
-import com.downloader.Status;
 import com.github.guilhe.circularprogressview.CircularProgressView;
+import com.google.gson.Gson;
 import com.photozig.prototype.R;
 import com.photozig.prototype.controller.DownloadManager;
+import com.photozig.prototype.rest.models.AppInfo;
 import com.photozig.prototype.rest.models.ZigObject;
-import com.photozig.prototype.util.Utils;
+import com.photozig.prototype.ui.activity.PhotoActivity;
+import com.photozig.prototype.ui.viewholder.PhotoHolder;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by macbook on 02/12/2017.
@@ -40,16 +34,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
 
     private static final String TAG = "PHOTO";
     private final ArrayList<ZigObject> itens;
+    private final AppInfo appInfo;
 
     private String location;
     private Context context;
-    private float progressValue;
 
-    public PhotoAdapter(Context context, ArrayList<ZigObject> itens, String location) {
+    public PhotoAdapter(Context context, AppInfo appInfo) {
 
         this.context = context;
-        this.itens = itens;
-        this.location = location;
+        this.appInfo = appInfo;
+        this.itens = appInfo.getZigObjects();
+        this.location = appInfo.getAssetsLocation();
 
     }
 
@@ -72,10 +67,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
      * @param position
      */
     @Override
-    public void onBindViewHolder(final PhotoHolder holder, int position) {
+    public void onBindViewHolder(final PhotoHolder holder, final int position) {
 
         TextView txtName = (TextView) holder.itemView.findViewById(R.id.txt_name);
-        LinearLayout relativeClick = (LinearLayout) holder.itemView.findViewById(R.id.relative_click);
+        ImageView btnPlay = (ImageView) holder.itemView.findViewById(R.id.btn_play);
         ImageView imgPhoto = (ImageView) holder.itemView.findViewById(R.id.avatar);
         final ProgressWheel progressWheel = (ProgressWheel) holder.itemView.findViewById(R.id.progress_wheel);
 
@@ -108,12 +103,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
         });
 
         //click
-        relativeClick.setOnClickListener(new View.OnClickListener() {
+        btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(context, ArtistaActivity.class);
-                //intent.putExtra("id_artista", item.getId());
-                //context.startActivity(intent);
+                Intent intent = new Intent(context, PhotoActivity.class);
+                intent.putExtra("appinfo", new Gson().toJson(appInfo));
+                intent.putExtra("position", position);
+                context.startActivity(intent);
             }
         });
 
@@ -121,7 +117,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
         clickDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 DownloadManager.addDownloadID(item, location);
             }
         });

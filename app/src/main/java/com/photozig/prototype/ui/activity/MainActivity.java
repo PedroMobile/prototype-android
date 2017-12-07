@@ -68,19 +68,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         load(this);
     }
 
-    /**
-     * Init Downloader
-     */
-    private void initDownloader(){
-
-        // Enabling database for resume support even after the application is killed:
-        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
-                .setDatabaseEnabled(true)
-                .build();
-        PRDownloader.initialize(getApplicationContext(), config);
-
-    }
-
     @Override
     public void onRefresh() {
         load(this);
@@ -96,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void onResponse(Call<AppInfo> call, Response<AppInfo> response) {
                 swipeLayout.setRefreshing(false);
 
-                PhotoAdapter adapter = new PhotoAdapter(context, response.body().getZigObjects(), response.body().getAssetsLocation());
+                PhotoAdapter adapter = new PhotoAdapter(context, response.body());
                 recyclerView.setAdapter(adapter);
 
             }

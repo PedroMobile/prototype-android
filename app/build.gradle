@@ -56,6 +56,7 @@ dependencies {
     // https://github.com/GuilhE/android-circular-progress-view
     compile 'com.github.guilhe:circular-progress-view:1.2.1'
 
+    // PRDownloader
     compile 'com.mindorks.android:prdownloader:0.2.0'
 
     testCompile 'junit:junit:4.12'

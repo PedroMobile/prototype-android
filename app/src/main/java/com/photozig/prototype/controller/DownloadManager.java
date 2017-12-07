@@ -1,6 +1,7 @@
 package com.photozig.prototype.controller;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import com.downloader.Error;
@@ -16,7 +17,9 @@ import com.photozig.prototype.rest.models.ZigObject;
 import com.photozig.prototype.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -25,10 +28,11 @@ import java.util.Map;
 
 public class DownloadManager {
 
-    private static ArrayList<Integer> list;
+    private static Deque<Integer> list;
     public static Map<String, Integer> downloadIds;
     public static Map<String, Long> progresses;
     public static String dirPath;
+    private static String TAG = "DOWNLOAD_MANAGER";
 
     /**
      * init
@@ -38,11 +42,10 @@ public class DownloadManager {
     public static void init(Context context){
         // Enabling database for resume support even after the application is killed:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
-                .setDatabaseEnabled(true)
                 .build();
         PRDownloader.initialize(context, config);
 
-        list = new ArrayList<>();
+        list = new LinkedList<>();
         downloadIds = new HashMap<String, Integer>();
         progresses = new HashMap<String, Long>();
         dirPath = Utils.getRootDirPath(context);
@@ -51,33 +54,52 @@ public class DownloadManager {
 
     public static void addDownloadID(final ZigObject item, String location){
 
-        DownloadManager.downloadIds.put(item.getBg() , PRDownloader.download(location+"/"+item.getBg(), dirPath,  item.getBg()).build()
+        // Pausa todos os downloads por um momento
+        for(int downloadId: list){
+            PRDownloader.pause(downloadId);
+        }
 
-                .setOnProgressListener(
-                        new OnProgressListener() {
-                            @Override
-                            public void onProgress(Progress progress) {
-                                progresses.put(item.getBg(), (progress.currentBytes*100)/progress.totalBytes) ;
+        // Verificar se o download ja foi iniciado, se sim, ele se torna prioridade e é retomado de onde parou.
+        // O restante da fila será retomada normalmente quando esse terminar.
+        if(DownloadManager.downloadIds.get(item.getBg()) != null){
+            list.remove(DownloadManager.downloadIds.get(item.getBg()));
+            list.addFirst(DownloadManager.downloadIds.get(item.getBg()));
+            PRDownloader.resume(list.getFirst());
+        }else {
+
+            int downloadId = PRDownloader.download(location + "/" + item.getBg(), dirPath, item.getBg()).build()
+
+                    .setOnProgressListener(
+                            new OnProgressListener() {
+                                @Override
+                                public void onProgress(Progress progress) {
+                                    progresses.put(item.getBg(), (progress.currentBytes * 100) / progress.totalBytes);
+                                }
                             }
-                        }
-                ).start(
-                        new OnDownloadListener() {
-                            @Override
-                            public void onDownloadComplete() {}
+                    ).start(
+                            new OnDownloadListener() {
+                                @Override
+                                public void onDownloadComplete() {
 
-                            @Override
-                            public void onError(Error error) {}
-                        }));
+                                    Log.i(TAG, "DOWNLOAD COMPLETED = "+item.getName());
+                                    list.removeFirst();
+                                    DownloadManager.downloadIds.remove(item.getBg());
 
-        /*if(!list.contains(newID)) {
-            for (int downloadID : list) {
-                if (PRDownloader.getStatus(downloadID) == Status.RUNNING && downloadID != newID) {
-                    PRDownloader.pause(downloadID);
-                }
-            }
+                                    if (list.size() > 0) {
+                                        PRDownloader.resume(list.getFirst());
+                                    }
 
-            list.add(newID);
+                                }
 
-        }*/
+                                @Override
+                                public void onError(Error error) {
+                                }
+                            });
+            Log.i(TAG, "DOWNLOAD STARTED = "+item.getName());
+            DownloadManager.downloadIds.put(item.getBg(), downloadId);
+
+            list.addFirst(downloadId);
+        }
+
     }
 }
