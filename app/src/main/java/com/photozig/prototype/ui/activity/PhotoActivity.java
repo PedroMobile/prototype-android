@@ -232,7 +232,6 @@ public class PhotoActivity extends AppCompatActivity {
                         }
 
                         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                            Log.i(TAG, "TIME = "+mediaPlayer.getCurrentPosition());
                             if(item.getTxts() != null){
                                 for(TxtObject txtObject : item.getTxts()){
                                     if( (mediaPlayer.getCurrentPosition() / 1000) > txtObject.getTime() ){
