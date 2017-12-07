@@ -20,6 +20,7 @@ import com.photozig.prototype.controller.DownloadManager;
 import com.photozig.prototype.rest.models.AppInfo;
 import com.photozig.prototype.rest.models.TxtObject;
 import com.photozig.prototype.rest.models.ZigObject;
+import com.universalvideoview.UniversalVideoView;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +34,6 @@ import butterknife.OnClick;
 public class PhotoActivity extends AppCompatActivity {
 
     private static final String TAG = "VIDEO";
-    @BindView(R.id.video)
-    VideoView videoView;
 
     @BindView(R.id.btn_previous)
     ImageView btnPrevious;
@@ -47,6 +46,11 @@ public class PhotoActivity extends AppCompatActivity {
 
     @BindView(R.id.txt_subtitle)
     TextView txtSubtitle;
+
+    @BindView(R.id.video2)
+    UniversalVideoView videoView;
+
+
 
 
     private int position;
@@ -126,13 +130,14 @@ public class PhotoActivity extends AppCompatActivity {
         txtSubtitle.setText("");
 
         File file = new File(DownloadManager.dirPath+"/"+item.getBg());
+
         if(file.exists()){
 
             progressDownload.setVisibility(View.GONE);
             videoView.setVisibility(View.VISIBLE);
 
             if(isPlaying) {
-                videoView.setVideoURI(Uri.parse(DownloadManager.dirPath + "/" + item.getBg()));
+                videoView.setVideoPath(DownloadManager.dirPath+"/"+item.getBg());
                 videoView.start();
             }
 
@@ -179,8 +184,7 @@ public class PhotoActivity extends AppCompatActivity {
                 mediaPlayer.setDataSource(appInfo.getAssetsLocation() + "/" + item.getSg());
                 //mediaPlayer.setDataSource("https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3");
                 mediaPlayer.setOnPreparedListener(preparedListener);
-
-                mediaPlayer.prepareAsync();
+                mediaPlayer.prepare();
 
             }
         } catch (IOException e) {
@@ -286,6 +290,18 @@ public class PhotoActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mediaPlayer.start();
     }
 
     @Override

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.photozig.prototype"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -58,6 +58,10 @@ dependencies {
 
     // PRDownloader
     compile 'com.mindorks.android:prdownloader:0.2.0'
+
+    compile 'com.linsea:universalvideoview:1.1.0@aar'
+
+    compile 'com.karumi:dexter:4.2.0'
 
     testCompile 'junit:junit:4.12'
 }
