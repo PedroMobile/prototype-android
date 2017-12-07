@@ -307,7 +307,8 @@ public class PhotoActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mediaPlayer.reset();
+        isCompleted = true;
+        mediaPlayer.stop();
         timer.cancel();
     }
 }
